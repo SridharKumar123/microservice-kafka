@@ -1,0 +1,50 @@
+
+The Order microservice uses Spring's KafkaTemplate to send message while the other two microservices use the annotation @KafkaListener on the methods that 
+should be called if a new record comes in. All records are put in the order topic. It has five partitions to allow for scalability.
+
+For tests an embedded Kafka server is used. A @ClassRule starts it. And a method annotated with @BeforeClass configures Spring Kafka to use the embedded Kafka server.
+
+The orders are serialized as JSON. So the Order object of the order microservice is serialized as a JSON data structure. 
+The other two microservices just read the data they need for shipping and invoicing. So the invoicing microservices reads the Invoiceobject 
+and the delivery microservice the Deliveryobject. This avoids code dependencies between the microservices. Order contains all the data for
+Invoice as well as Delivery. JSON serialization is flexible. So when an Order is deserialized into Invoice and Delivery just the needed data is read.
+
+There are two Docker container for the microservices. The other Docker containers are for Apache httpd, Kafka, Zookeeper and Postgres.
+
+You can also start a shell on the Kafka server docker exec -it mskafka_kafka_1 /bin/sh and then take a look at the records in 
+the topic using kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic order --from-beginning.
+
+
+This is done using a topic order. It has five partitions. Shipment and invoicing each have a separate consumer group. 
+So multiple instances of shipment and invoicing can be run. Each instance would get specific events.
+
+Srping boot uses below to make MVC much simpler
+ModelAndView
+ModelAndView(String viewName, String modelName, Object modelObject)
+Convenient constructor to take a single model object.
+
+Simply put, the model can supply attributes used for rendering views. 
+All the data, we place within these models, is used by a view – in general, a templated view to render the web page.
+
+To provide a view with usable data, we simply add this data to its Model object. Additionally, maps with attributes can be merged with Model instances:
+If we have a Thymeleaf template file targeted by our controller's methods as their view.
+A parameter passed through the model will be accessible from within the thymeleaf HTML code.
+
+
+JPA
+
+JPA provides the @Embeddable annotation to declare that a class will be embedded by other entities.
+The JPA annotation @Embedded is used to embed a type into another entity.
+As a result, we have our entity Company, embedding contact person details, and mapping to a single database table. We still have one more problem,
+though, and that is how JPA will map these fields to database columns.
+we can use @AttributeOverrides and @AttibuteOverride to override the column properties of our embedded type.
+
+we've configured an entity with some embedded attributes and mapped them to the same database table as the enclosing entity.
+For that, we used the @Embedded, @Embeddable, @AttributeOverrides and @AttributeOverride annotations provided by the Java Persistence API.
+
+apache commons-lang
+Java Override toString() with ToStringBuilder
+ToStringBuilder.reflectionToString(this);
+HashCodeBuilder.reflectionHashCode(this);
+EqualsBuilder.reflectionEquals(this, obj);
+
